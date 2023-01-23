@@ -8,14 +8,15 @@
   "scripts": {
     "dev": "npx nodemon",
     "build": "yarn prettier-format && rimraf ./build && tsc",
-    "start": "yarn build && node build/bot.js",
+    "start": "node build/bot.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
   },
   "dependencies": {
     "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "find-config": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
