@@ -16,7 +16,8 @@
   "dependencies": {
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
-    "find-config": "^1.0.0"
+    "find-config": "^1.0.0",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
