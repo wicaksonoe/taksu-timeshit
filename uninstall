@@ -1,5 +1,5 @@
 #!/bin/sh
 
 APP_DIR=$(pwd)
-crontab -u auto-timesheet -l | grep -v 'npm $APP_DIR/build/cron/auto-timesheet.js'  | crontab -u auto-timesheet -
+crontab -u $(whoami) -l | grep -v 'npm $APP_DIR/build/cron/auto-timesheet.js'  | crontab -u $(whoami) -
 rm -r $APP_DIR
