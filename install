@@ -1,5 +1,0 @@
-#!/bin/sh
-
-APP_DIR=$(pwd)
-(cd $APP_DIR && yarn install && yarn build)
-crontab -l | { cat; echo "0 17 * * * npm $APP_DIR/build/cron/auto-timesheet.js"; } | crontab -u $(whoami) -

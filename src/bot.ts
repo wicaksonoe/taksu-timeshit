@@ -8,16 +8,19 @@ import {
   REST,
   Routes
 } from 'discord.js';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import Command from './interfaces/command';
 import { Sequelize } from 'sequelize';
 import Users, { UserSchema } from './models/users';
+import cron from 'node-cron';
+import AutoTimesheet from './cron/auto-timesheet';
 
 dotenv.config({ path: require('find-config')('.env') });
 console.log('TOKEN: ', process.env.BOT_TOKEN);
 
 // initialize client
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+client.login(process.env.BOT_TOKEN);
 
 // initialize db
 const db = new Sequelize({ dialect: 'sqlite', storage: 'database.sqlite' });
@@ -74,8 +77,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-client.login(process.env.BOT_TOKEN);
-
 // REST for command list
 const commandList: Array<any> = [];
 commandFiles.map((file) => {
@@ -109,3 +110,6 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN!);
     console.error(error);
   }
 })();
+
+// set up cron
+cron.schedule('17 * * * *', async () => await AutoTimesheet(client, db));

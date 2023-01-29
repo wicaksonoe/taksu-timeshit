@@ -1,32 +1,13 @@
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import * as dotenv from 'dotenv';
 import { exit } from 'process';
-import { Model, Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import Users, { UserSchema } from '../models/users';
 import { GenerateTimeSheetUrl } from '../utils/generator';
 
-dotenv.config({ path: require('find-config')('.env') });
-console.log('TOKEN: ', process.env.BOT_TOKEN);
-
-// initialize client
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-client.login(process.env.BOT_TOKEN);
-
-// initialize db
-const db = new Sequelize({ dialect: 'sqlite', storage: 'database.sqlite' });
-
-try {
-  db.authenticate();
-  console.log('Connection to the database established successfully.');
-} catch (error) {
-  console.log('Unable to connect to the database: ', error);
-}
-
-client.once(Events.ClientReady, async (client) => {
+async function Execute(client: Client, db: Sequelize) {
   const userModel = Users(db);
   userModel.sync();
-
-  console.log(`Ready! Logged in as ${client.user.tag}`);
 
   // run cron job
   const guildIds = await userModel.findAll({
@@ -77,7 +58,43 @@ client.once(Events.ClientReady, async (client) => {
       );
     }
   }
+}
 
-  client.destroy();
-  exit();
-});
+export default async function (discordClient?: Client, database?: Sequelize) {
+  let client: Client;
+  let db: Sequelize;
+
+  if (!database) {
+    // initialize db
+    db = new Sequelize({ dialect: 'sqlite', storage: 'database.sqlite' });
+
+    try {
+      db.authenticate();
+      console.log('Connection to the database established successfully.');
+    } catch (error) {
+      console.log('Unable to connect to the database: ', error);
+    }
+  } else {
+    db = database;
+  }
+
+  if (!discordClient) {
+    dotenv.config({ path: require('find-config')('.env') });
+    console.log('TOKEN: ', process.env.BOT_TOKEN);
+
+    // initialize client
+    client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    client.login(process.env.BOT_TOKEN);
+
+    client.once(Events.ClientReady, async (client) => {
+      console.log(`Ready! Logged in as ${client.user?.tag}`);
+
+      await Execute(client, db);
+
+      client.destroy();
+      exit();
+    });
+  } else {
+    await Execute(discordClient, db);
+  }
+}
