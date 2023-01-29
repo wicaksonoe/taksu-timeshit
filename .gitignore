@@ -1,6 +1,8 @@
 node_modules/**
 build/**
 
+*.sqlite
+
 .env
 .env.*
 !.env.examples
