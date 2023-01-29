@@ -10,11 +10,24 @@ import {
 } from 'discord.js';
 import * as dotenv from 'dotenv';
 import Command from './interfaces/command';
+import { Sequelize } from 'sequelize';
+import Users, { UserSchema } from './models/users';
 
 dotenv.config({ path: require('find-config')('.env') });
 console.log('TOKEN: ', process.env.BOT_TOKEN);
 
+// initialize client
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+// initialize db
+const db = new Sequelize({ dialect: 'sqlite', storage: 'database.sqlite' });
+
+try {
+  db.authenticate();
+  console.log('Connection to the database established successfully.');
+} catch (error) {
+  console.log('Unable to connect to the database: ', error);
+}
 
 const commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -35,12 +48,13 @@ commandFiles.map((file) => {
 });
 
 client.once(Events.ClientReady, (x) => {
+  Users(db).sync();
   console.log(`Ready! Logged in as ${x.user.tag}`);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
-  console.log(interaction);
+  console.log('HEHEHE: ', interaction.user.id);
 
   const command = commands.get(interaction.commandName) as Command;
 
@@ -50,7 +64,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
   try {
-    await command.execute(interaction);
+    await command.execute(interaction, db);
   } catch (error) {
     console.error(error);
     await interaction.reply({
