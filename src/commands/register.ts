@@ -64,6 +64,7 @@ const command: Command = {
     );
 
     await interaction.reply('Got it.');
+    setTimeout(() => interaction.deleteReply(), 30_000);
   }
 };
 
