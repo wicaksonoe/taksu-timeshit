@@ -1,43 +1,61 @@
-import { SlashCommandBuilder } from 'discord.js';
-import moment from 'moment';
+import {
+  CacheType,
+  ChatInputCommandInteraction,
+  SlashCommandBuilder,
+  User
+} from 'discord.js';
+import { Sequelize } from 'sequelize';
 import Command from '../interfaces/command';
+import Users, { UserSchema } from '../models/users';
+import { GenerateTimeSheetUrl } from '../utils/generator';
 
 const command: Command = {
   data: new SlashCommandBuilder()
     .setName('ts')
     .setDescription('Generate Time Sheeett!'),
-  execute: async (interaction: any) => {
-    const fields = [
-      {
-        key: 'entry.2116052852',
-        value: 'NAME'
-      },
-      {
-        key: 'entry.532096719',
-        value: 'POSITION'
-      },
-      {
-        key: 'entry.1369552271',
-        value: 'PROJECT'
-      },
-      {
-        key: 'entry.1060472253',
-        value: moment().format('YYYY-MM-DD')
-      }
-    ];
+  execute: async (
+    interaction: ChatInputCommandInteraction<CacheType>,
+    db: Sequelize
+  ) => {
+    const sender = interaction.user as User | undefined;
+    if (!sender) return;
 
-    const parsedQuery = fields.map((x) => `${x.key}=${x.value}`).join('&');
+    const guildId = interaction.guildId;
 
-    // entry.2116052852=I+Gede+Agung+Wicaksono+Dharmayasa&
-    // entry.532096719=Software+Developer&
-    // entry.1369552271=WTS&
-    // entry.1060472253=
+    const userModel = Users(db);
+
+    const userInfo = await userModel.findOne({
+      where: { discord_id: sender.id, guild_id: guildId }
+    });
+
+    if (!userInfo) {
+      await interaction.reply(
+        "Your account doesn't registered on my database."
+      );
+      return;
+    }
+
+    const employee: UserSchema = {
+      name: userInfo.get('name'),
+      discord_id: userInfo.get('discord_id'),
+      guild_id: userInfo.get('guild_id'),
+      position: userInfo.get('position'),
+      project: userInfo.get('project'),
+      is_active: userInfo.get('is_active')
+    };
+
+    const parsedQuery = await GenerateTimeSheetUrl(employee);
 
     await interaction.reply(
-      `Hi ${interaction.user} \n` + process.env.PREDEFINED_URL + parsedQuery
+      "Got it. Your timesh**t already sent via DM. Don't report me as spam pleasee. \n.･ﾟﾟ･(／ω＼)･ﾟﾟ･."
     );
 
-    setTimeout(() => interaction.deleteReply(), 10000);
+    await sender.send(
+      `Hi ${interaction.user} here the link ` +
+        '(ﾉ´ヮ`)ﾉ*: ･ﾟ \n' +
+        process.env.PREDEFINED_URL +
+        parsedQuery.message
+    );
   }
 };
 
