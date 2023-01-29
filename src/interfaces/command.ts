@@ -1,6 +1,14 @@
-import { SlashCommandBuilder } from 'discord.js';
+import {
+  CacheType,
+  ChatInputCommandInteraction,
+  SlashCommandBuilder
+} from 'discord.js';
+import { Sequelize } from 'sequelize';
 
 export default interface Command {
-  data: any;
-  execute(interaction: any): Promise<void>;
+  data: SlashCommandBuilder | any;
+  execute(
+    interaction: ChatInputCommandInteraction<CacheType>,
+    db?: Sequelize
+  ): Promise<void>;
 }
