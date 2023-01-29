@@ -1,4 +1,4 @@
-#### [#](#dev) Start development without install nodejs {#dev}
+#### Start development without install nodejs
 
 ```bash
 -- on linux / mac --
@@ -8,13 +8,13 @@ $ docker run --rm -it -v $(pwd):/app -w /app node:18.13.0-alpine /bin/sh
 $ docker run --rm -it -v YOUR_ABSOLUTE_DIR:/app -w /app node:18.13.0-alpine /bin/sh
 ```
 
-#### [#](#build) Build the bot {#build}
+#### Build the bot
 
 ```bash
 $ docker build -t discord-taksu-bot .
 ```
 
-#### [#](#run) Run the bot {#run}
+#### Run the bot
 
 ```bash
 $ docker run \
@@ -24,7 +24,7 @@ $ docker run \
 discord-taksu-bot
 ```
 
-#### [#](#env) Required env {#env}
+#### Required env
 
 | Variables      | Description                                                                                                      |
 | -------------- | ---------------------------------------------------------------------------------------------------------------- |
