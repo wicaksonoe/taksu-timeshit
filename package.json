@@ -18,11 +18,13 @@
     "dotenv": "^16.0.3",
     "find-config": "^1.0.0",
     "moment": "^2.29.4",
+    "node-cron": "^3.0.2",
     "sequelize": "^6.28.0",
     "sqlite3": "^5.1.4"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
+    "@types/node-cron": "^3.0.7",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
     "eslint": "^8.32.0",
