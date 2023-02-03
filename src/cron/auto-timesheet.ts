@@ -51,8 +51,8 @@ async function Execute(client: Client, db: Sequelize) {
       }
 
       await discordUser.send(
-        `Hi ${discordUser} here is the timesh**t link for today ` +
-          '(ﾉ´ヮ`)ﾉ*: ･ﾟ \n' +
+        `Hi ${discordUser} here is the timesh\*\*t link for today ` +
+          '(ﾉ´ヮ`)ﾉ\*: ･ﾟ \n' +
           process.env.PREDEFINED_URL +
           parsedQuery.message
       );
