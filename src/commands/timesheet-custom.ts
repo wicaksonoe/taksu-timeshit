@@ -60,13 +60,13 @@ const command: Command = {
     );
 
     await interaction.reply(
-      "Got it. Your timesh**t already sent via DM. Don't report me as spam pleasee. \n.･ﾟﾟ･(／ω＼)･ﾟﾟ･."
+      "Got it. Your timesh\*\*t already sent via DM. Don't report me as spam pleasee. \n.･ﾟﾟ･(／ω＼)･ﾟﾟ･."
     );
     setTimeout(() => interaction.deleteReply(), 30_000);
 
     await sender.send(
       `Hi ${interaction.user} here the link ` +
-        '(ﾉ´ヮ`)ﾉ*: ･ﾟ \n' +
+        '(ﾉ´ヮ`)ﾉ\*: ･ﾟ \n' +
         process.env.PREDEFINED_URL +
         parsedQuery.message
     );

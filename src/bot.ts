@@ -111,4 +111,4 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN!);
 })();
 
 // set up cron
-cron.schedule('0 9 * * *', async () => await AutoTimesheet(client, db)); // 09:00 UTC is 17:00 WITA
+cron.schedule('0 9 * * 1-5', async () => await AutoTimesheet(client, db)); // 09:00 UTC is 17:00 WITA
