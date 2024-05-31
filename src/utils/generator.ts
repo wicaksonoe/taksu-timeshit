@@ -26,6 +26,14 @@ export async function GenerateTimeSheetUrl(
     {
       key: 'entry.1060472253',
       value: date ?? moment().format('YYYY-MM-DD')
+    },
+    {
+      key: 'entry.813213160',
+      value: '08:00'
+    },
+    {
+      key: 'entry.1923238489',
+      value: '17:00'
     }
   ];
 
